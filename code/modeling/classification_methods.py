@@ -77,4 +77,10 @@ class Classification_ann():
         
         return plt.show()
     
-    
+    def create_hist(self, y_h_train, y_h_test):
+        plt.title('Saída da rede neural - Modelo 3')
+        plt.hist(y_h_train, bins=30, color='orange', label='treino')
+        plt.hist(y_h_test, bins=30, color='purple', label='test')
+        plt.xlabel('Valores')
+        plt.ylabel('Frequência')
+        plt.show()
