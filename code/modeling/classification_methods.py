@@ -41,26 +41,6 @@ class Classification_ann():
         return props
     
     
-    def create_model(x, n_neurons:list):
-        '''
-        esta função cria uma rede neural
-        '''
-        model = Sequential()
-        
-        if len(n_neurons) == 1:
-            model.add(Dense(n_neurons[0], input_shape=(11,), activation='relu'))
-        else:
-            for index, n in n_neurons:
-                if index == 0:
-                    model.add(Dense(n, input_shape=(11,), activation='relu'))
-                else:
-                    model.add(Dense(n, activation='relu'))
-                    
-        model.add(Dense(1, activation='sigmoid'))
-    
-        return model
-    
-    
     def scal_data(self, x_train, x_val, x_test):
         '''
         esta função normaliza os dados
@@ -74,3 +54,43 @@ class Classification_ann():
         x_test_norm = scaler.transform(x_test)
         
         return x_train_norm, x_val_norm, x_test_norm
+
+
+    def plot_history(self, history, n_epochs):
+        
+        fig = plt.figure(figsize=(12,6))
+        ax = fig.add_subplot(1,2,1)
+        plt.plot(range(1, n_epochs+1), history.history['recall'],label='Treinamento')
+        plt.plot(range(1, n_epochs+1), history.history['val_loss'], label='Validação')
+        plt.legend(loc='best')
+        plt.xlabel('N_epochs')
+        plt.ylabel('Recall')
+        plt.title('Curva de aprendizado - Recall')
+        
+        ax = fig.add_subplot(1,2,2)
+        plt.plot(range(1, n_epochs+1), history.history['loss'], label='Treinamento')
+        plt.plot(range(1, n_epochs+1), history.history['val_loss'], label='Validação')
+        plt.legend(loc='best')
+        plt.xlabel('N_epochs')
+        plt.ylabel('Função de Perda')
+        plt.title('Curva de aprendizado - Função de Perda')
+        
+        return plt.show()
+    
+    
+    def analyze_results(x_test_norm, list_models, list_model_names, THRESHOLD=0.6):
+        for i in range(len(list_models)):
+
+            # Faz a previsão na base de teste
+            yhat_test = list_models[i].predict(x_test_norm)
+
+            # Transforma em classes
+            yhat_test_class = [1 if x >= THRESHOLD else 0 for x in yhat_test]
+
+        # Imprime resultados
+    
+        print(f'DESEMPENHO DE CLASSIFICAÇÃO - MODELO {i+1} - {list_model_names[i]} - Prob. min = {THRESHOLD}')
+        print(classification_report(y_test, yhat_test_class))
+   
+        print('*' * 50)
+        print('\n')
