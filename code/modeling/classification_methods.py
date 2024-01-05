@@ -78,19 +78,3 @@ class Classification_ann():
         return plt.show()
     
     
-    def analyze_results(x_test_norm, list_models, list_model_names, THRESHOLD=0.6):
-        for i in range(len(list_models)):
-
-            # Faz a previsão na base de teste
-            yhat_test = list_models[i].predict(x_test_norm)
-
-            # Transforma em classes
-            yhat_test_class = [1 if x >= THRESHOLD else 0 for x in yhat_test]
-
-        # Imprime resultados
-    
-        print(f'DESEMPENHO DE CLASSIFICAÇÃO - MODELO {i+1} - {list_model_names[i]} - Prob. min = {THRESHOLD}')
-        print(classification_report(y_test, yhat_test_class))
-   
-        print('*' * 50)
-        print('\n')
